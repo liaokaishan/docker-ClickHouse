@@ -1,0 +1,26 @@
+version: '3'
+services:
+  clickhouse-server:
+    image: yandex/clickhouse-server
+    container_name: clickhouse-server
+    hostname: clickhouse-server
+    ports:
+      - 8123:8123
+      - 9000:9000
+      - 9009:9009
+
+    volumes:
+      - ./config/config.xml:/etc/clickhouse-server/config.xml
+      - ./config/users.xml:/etc/clickhouse-server/users.xml
+      - ./data:/var/lib/clickhouse
+      - ./log/clickhouse-server.log:/var/log/clickhouse-server/clickhouse-server.log
+      - ./log/clickhouse-server.err.log:/var/log/clickhouse-server/clickhouse-server.err.log
+  clickhouse-client:
+    image: yandex/clickhouse-client
+    container_name: clickhouse-client
+    command: ['--host', 'server']
+  clickhouse-tabix:
+    image: spoonest/clickhouse-tabix-web-client
+    container_name: clickhouse-tabix
+    ports:
+      - 8086:80
